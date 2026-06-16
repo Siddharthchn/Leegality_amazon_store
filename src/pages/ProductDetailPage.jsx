@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
             >
               <div className="grid gap-0 lg:grid-cols-2">
                 <div className="border-b border-gray-100 p-6 sm:p-8 lg:border-b-0 lg:border-r">
-                  <div className="relative flex h-64 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-gray-50 to-white sm:h-80 lg:h-96">
+                  <div className="relative flex h-64 items-center justify-center overflow-hidden rounded-xl bg-linear-to-b from-gray-50 to-white sm:h-80 lg:h-96">
                     <AnimatePresence mode="wait">
                       <motion.img
                         key={images[activeImage]}

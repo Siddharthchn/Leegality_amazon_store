@@ -15,7 +15,7 @@ export default function ProductCard({ product, index = 0 }) {
         to={`/product/${product.id}`}
         className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-sm transition-shadow hover:border-gray-300 hover:shadow-lg"
       >
-        <div className="relative flex h-48 shrink-0 items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white p-5">
+        <div className="relative flex h-48 shrink-0 items-center justify-center overflow-hidden bg-linear-to-b from-gray-50 to-white p-5">
           <motion.img
             src={product.thumbnail}
             alt={product.title}
