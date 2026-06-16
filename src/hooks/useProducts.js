@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { fetchProducts, fetchProductsByCategory } from '../services/api'
+import { fetchProducts, fetchProductsByCategory, fetchSearchProducts } from '../services/api'
+import { useDebounce } from './useDebounce'
 
 const PAGE_SIZE = 8
 
@@ -7,6 +8,11 @@ export function useProducts(filters) {
   const [allProducts, setAllProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const trimmedSearch = filters.search.trim()
+  const debouncedSearch = useDebounce(trimmedSearch, 400)
+  // Clear immediately; debounce only when typing
+  const searchQuery = trimmedSearch === '' ? '' : debouncedSearch
 
   useEffect(() => {
     let cancelled = false
@@ -16,9 +22,15 @@ export function useProducts(filters) {
       setError(null)
 
       try {
-        const data = filters.category
-          ? await fetchProductsByCategory(filters.category, { limit: 0 })
-          : await fetchProducts({ limit: 0 })
+        let data
+
+        if (searchQuery) {
+          data = await fetchSearchProducts(searchQuery, { limit: 0 })
+        } else if (filters.category) {
+          data = await fetchProductsByCategory(filters.category, { limit: 0 })
+        } else {
+          data = await fetchProducts({ limit: 0 })
+        }
 
         if (!cancelled) setAllProducts(data.products)
       } catch (err) {
@@ -32,7 +44,7 @@ export function useProducts(filters) {
     return () => {
       cancelled = true
     }
-  }, [filters.category])
+  }, [filters.category, searchQuery])
 
   const brands = [...new Set(allProducts.map((p) => p.brand).filter(Boolean))].sort()
 
@@ -40,6 +52,7 @@ export function useProducts(filters) {
     const min = filters.minPrice !== '' ? Number(filters.minPrice) : null
     const max = filters.maxPrice !== '' ? Number(filters.maxPrice) : null
 
+    if (filters.category && product.category !== filters.category) return false
     if (min !== null && product.price < min) return false
     if (max !== null && product.price > max) return false
     if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) return false
@@ -61,5 +74,6 @@ export function useProducts(filters) {
     totalPages,
     currentPage,
     pageSize: PAGE_SIZE,
+    appliedSearch: searchQuery,
   }
 }

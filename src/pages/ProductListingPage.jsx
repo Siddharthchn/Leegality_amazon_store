@@ -14,7 +14,7 @@ import { buildProductListSchema, getCanonicalUrl, getSiteDescription } from '../
 
 export default function ProductListingPage() {
   const { filters, updateFilters } = useFilters()
-  const { products, brands, loading, error, totalPages, currentPage, totalProducts } =
+  const { products, brands, loading, error, totalPages, currentPage, totalProducts, appliedSearch } =
     useProducts(filters)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
@@ -71,7 +71,9 @@ export default function ProductListingPage() {
             <main id="main-content" className="min-w-0 flex-1">
               <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">All Products</h1>
+                  <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                    {appliedSearch ? `Results for "${appliedSearch}"` : 'All Products'}
+                  </h1>
                   {!loading && !error && (
                     <p className="mt-1 text-sm text-gray-500">
                       {totalProducts} product{totalProducts !== 1 ? 's' : ''} found
@@ -97,7 +99,7 @@ export default function ProductListingPage() {
               <AnimatePresence mode="wait">
                 {!loading && !error && (
                   <motion.section
-                    key={`${filters.category}-${filters.page}-${filters.brands.join()}-${filters.minPrice}-${filters.maxPrice}`}
+                    key={`${filters.search}-${filters.category}-${filters.page}-${filters.brands.join()}-${filters.minPrice}-${filters.maxPrice}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -126,7 +128,13 @@ export default function ProductListingPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            updateFilters({ category: '', minPrice: '', maxPrice: '', brands: [] })
+                            updateFilters({
+                              search: '',
+                              category: '',
+                              minPrice: '',
+                              maxPrice: '',
+                              brands: [],
+                            })
                           }
                           className="mt-3 text-sm font-semibold text-accent hover:text-accent-hover"
                         >

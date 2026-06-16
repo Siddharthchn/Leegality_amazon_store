@@ -8,6 +8,13 @@ async function handleResponse(response) {
   return response.json()
 }
 
+export async function fetchSearchProducts(query, { limit = 30, skip = 0 } = {}) {
+  const response = await fetch(
+    `${BASE_URL}/products/search?q=${encodeURIComponent(query)}&limit=${limit}&skip=${skip}`,
+  )
+  return handleResponse(response)
+}
+
 export async function fetchProducts({ limit = 30, skip = 0 } = {}) {
   const response = await fetch(`${BASE_URL}/products?limit=${limit}&skip=${skip}`)
   return handleResponse(response)

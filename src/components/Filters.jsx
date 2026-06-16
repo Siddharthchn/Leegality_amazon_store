@@ -70,6 +70,7 @@ export default function Filters({ brands, onFilterChange, filters, className = '
   }
 
   const activeCount =
+    (filters.search ? 1 : 0) +
     (filters.category ? 1 : 0) +
     (filters.minPrice || filters.maxPrice ? 1 : 0) +
     filters.brands.length
@@ -88,7 +89,7 @@ export default function Filters({ brands, onFilterChange, filters, className = '
           <button
             type="button"
             onClick={() =>
-              onFilterChange({ category: '', minPrice: '', maxPrice: '', brands: [] })
+              onFilterChange({ search: '', category: '', minPrice: '', maxPrice: '', brands: [] })
             }
             className="text-xs font-semibold text-blue-600 hover:text-blue-800"
           >
