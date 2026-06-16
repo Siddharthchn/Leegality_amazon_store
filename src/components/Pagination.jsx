@@ -7,11 +7,12 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   const pages = getVisiblePages(currentPage, totalPages)
 
   return (
-    <motion.div
+    <motion.nav
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}
       className="mt-10 flex flex-wrap items-center justify-center gap-2"
+      aria-label="Product pagination"
     >
       <motion.button
         type="button"
@@ -58,7 +59,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       >
         Next →
       </motion.button>
-    </motion.div>
+    </motion.nav>
   )
 }
 
@@ -71,6 +72,8 @@ function PageButton({ page, currentPage, onPageChange }) {
       onClick={() => onPageChange(page)}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      aria-label={`Go to page ${page}`}
+      aria-current={isActive ? 'page' : undefined}
       className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold transition ${
         isActive
           ? 'bg-accent text-white shadow-md shadow-blue-200'
